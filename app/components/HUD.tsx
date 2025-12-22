@@ -38,13 +38,14 @@ function Panel({ children }: { children: React.ReactNode }) {
         position: "relative",
       }}
     >
+      
       <div
         style={{
           position: "absolute",
-          top: -1,
-          left: -1,
-          width: 12,
-          height: 12,
+          top: "-1px", // 使用字符串而不是数字，服务器渲染可能会使用展开css属性， “-1px”，客户端渲染使用简化的数字，如-1
+          left: "-1px",// 确保服务器和客户端渲染时产生完全相同的样式，
+          width: "12px",
+          height: "12px",
           borderTop: "2px solid #4fd1c5",
           borderLeft: "2px solid #4fd1c5",
         }}

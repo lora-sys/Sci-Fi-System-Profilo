@@ -19,9 +19,7 @@ export default function ThreeScene({
 
   useEffect(() => {
     if (!containerRef.current) return
-
     const scene = new THREE.Scene()
-
     const camera = new THREE.PerspectiveCamera(
       60,
       window.innerWidth / window.innerHeight,
@@ -52,6 +50,8 @@ export default function ThreeScene({
     const light = new THREE.PointLight(0xffffff, 1)
     light.position.set(5, 5, 5)
     scene.add(light)
+
+
 
     let frameId: number
 

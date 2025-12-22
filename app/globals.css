@@ -1,15 +1,16 @@
 @import "tailwindcss";
-
+/* 添加root里，然后@theme配置字体变量，然后body中引用，不然会导致之前样式发生差异，引发水合错误*/
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-ibm-plex-mono:'IBM Plex Mono',monospace;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-ibm-plex-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +23,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-ibm-plex-mono);
 }
