@@ -13,12 +13,14 @@ export default function ThreeScene({
 
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
   const coreRef = useRef<THREE.Mesh | null>(null)
-
+ const  sceneRef = useRef<THREE.Scene | null>(null) // 存储场景的实例
+ const  rendererRef = useRef<THREE.WebGLRenderer | null>(null) // 渲染器的实例
   const targetCameraZ = useRef(7)
   const targetCoreScale = useRef(1)
 
   useEffect(() => {
     if (!containerRef.current) return
+    // 创建场景、相机、渲染器
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(
       60,
@@ -35,6 +37,7 @@ export default function ThreeScene({
     })
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(window.devicePixelRatio)
+    rendererRef.current = renderer // 保存渲染器实例
     containerRef.current.appendChild(renderer.domElement)
 
     // 核心物体（先用最简单的）
@@ -47,10 +50,19 @@ export default function ThreeScene({
     coreRef.current = core
     scene.add(core)
 
+    // 光源
     const light = new THREE.PointLight(0xffffff, 1)
     light.position.set(5, 5, 5)
     scene.add(light)
 
+  // 窗口大小变化处理，防止窗口变化导致画面奇怪
+    const handleResize = () => {
+   if(!cameraRef.current || !rendererRef.current) return 
+   cameraRef.current.aspect = window.innerWidth / window.innerHeight
+   cameraRef.current.updateProjectionMatrix()
+   rendererRef.current.setSize(window.innerWidth, window.innerHeight)
+    }
+    window.addEventListener("resize",handleResize)
 
 
     let frameId: number
@@ -74,9 +86,29 @@ export default function ThreeScene({
     }
 
     animate()
-
+   // 清理函数
     return () => {
+      // 销毁
       cancelAnimationFrame(frameId)
+      window.removeEventListener("resize",handleResize)
+
+      // 释放资源
+      if(coreRef.current){
+        const geom = coreRef.current.geometry
+        const mat = coreRef.current.material as THREE.Material
+        geom.dispose()
+        mat.dispose()
+      }
+     if(rendererRef.current){
+      rendererRef.current.dispose()
+      containerRef.current?.removeChild(rendererRef.current.domElement)
+     }
+     // 清空引用
+     sceneRef.current = null
+      cameraRef.current = null
+      coreRef.current = null
+      rendererRef.current = null
+
       renderer.dispose()
       containerRef.current?.removeChild(renderer.domElement)
     }
@@ -94,8 +126,8 @@ export default function ThreeScene({
       ref={containerRef}
       style={{
         position: "fixed",
-        inset: 0,
-        zIndex: 0,
+        inset: 0,  // 类似 left：0 ，right:0,top:0,bottom:0
+        zIndex: 0, // 物体始终初于最底层，方便别的文字之类的，在上
       }}
     />
   )
