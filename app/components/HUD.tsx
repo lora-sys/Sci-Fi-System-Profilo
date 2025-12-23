@@ -38,7 +38,7 @@ function Panel({ children }: { children: React.ReactNode }) {
         position: "relative",
       }}
     >
-      
+      {/** 实现边框最上边角的l型的边框 */}
       <div
         style={{
           position: "absolute",
@@ -82,6 +82,7 @@ export default function HUD({
           pointerEvents: "auto",
         }}
       >
+        {/** 控制台模块感*/}
         <Panel>
           <div style={{ marginBottom: 12, opacity: 0.6 }}>
             SYSTEM MENU
@@ -107,6 +108,51 @@ export default function HUD({
           />
         </Panel>
       </div>
+     
+     {/** mode === PROJECTS 时的项目列表  
+      *
+  项目文案模版 
+  ▸ PROJECT NAME
+  TECH STACK
+  STATUS / ROLE
+  之后可以考虑做成可滚动的列表，做出控制台，hud效果，科幻效果，3d项目列表，项目的补充在下面添加就行
+*/}
+    {mode === "PROJECTS" &&
+    (
+    <div 
+    style={{
+      position:"absolute",
+      top:40,
+      left:200, // 与左侧菜单对齐
+      pointerEvents:"auto",
+    }}
+    >
+      <Panel>
+        <div
+        style={{ marginBottom:12,opacity:0.6}}
+        >
+          PROJECT DATABASE
+        </div>
+        <div style={{fontSize:13,lineHeight:1.6}}>
+         *SCI-FI HUD PORTFOLIO
+        <br/>
+        <span style={{opacity:0.5}}>
+          React/Three.js/WebGL
+        </span>
+
+        <br/><br/>
+
+        *INTERACTIVE DATA VIS
+        <br/>
+        <span style={{opacity:0.5}}>
+          D3.js/GLSL/UX
+        </span>
+        </div>
+      </Panel>
+    </div>
+    )
+    }
+
 
       {/* 右上角状态 */}
       <div
