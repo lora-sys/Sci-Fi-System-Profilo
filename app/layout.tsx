@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+
 import {IBM_Plex_Mono} from "next/font/google";
 import "./globals.css";
 
@@ -9,6 +10,9 @@ subsets:['latin'],
 weight:['400','700'],
 variable:'--font-ibm-plex-mono',
 })
+
+
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,10 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={ibm_Plex_Mono.variable}>
-      <body>
-        {children}
-      </body>
+    <html lang="en">
+      <body className={`font-ibm-plex-mono antialiased`}>{children}</body>
     </html>
   );
 }

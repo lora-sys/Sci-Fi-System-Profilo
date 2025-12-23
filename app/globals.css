@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 /* 添加root里，然后@theme配置字体变量，然后body中引用，不然会导致之前样式发生差异，引发水合错误*/
 :root {
@@ -24,4 +25,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-ibm-plex-mono);
+}
+
+.font-ibm-plex-mono {
+  font-family: 'IBM Plex Mono', monospace;
 }
