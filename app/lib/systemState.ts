@@ -16,3 +16,5 @@ export const SCENE_PRESET={
         coreScale:0.5,
     },
 }
+
+export type ProjectId = "HUD_SYSTEM" | "DATA_VIS" | null

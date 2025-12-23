@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
-import { SystemMode, SCENE_PRESET } from  "@/app/lib/systemState"
+import { SystemMode, SCENE_PRESET, ProjectId } from  "@/app/lib/systemState"
 
 export default function ThreeScene({
   mode,
+  activeProject,
 }: {
   mode: SystemMode
+  activeProject: ProjectId
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -17,6 +19,7 @@ export default function ThreeScene({
  const  rendererRef = useRef<THREE.WebGLRenderer | null>(null) // 渲染器的实例
   const targetCameraZ = useRef(7)
   const targetCoreScale = useRef(1)
+  const targetCoreEmissive = useRef(0) // 发光缓动，模拟选中时候的发光效果
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -45,6 +48,8 @@ export default function ThreeScene({
     const material = new THREE.MeshStandardMaterial({
       color: "#4fd1c5",
       wireframe: true,
+      emissive: "#4fd1c5",
+      emissiveIntensity: 0.2,
     })
     const core = new THREE.Mesh(geometry, material)
     coreRef.current = core
@@ -80,6 +85,11 @@ export default function ThreeScene({
       const ts = targetCoreScale.current
       const ns = s + (ts - s) * 0.05
       core.scale.set(ns, ns, ns)
+
+      // 核心发光缓动
+      //发光强度的缓动逻辑
+      const mat = core.material as THREE.MeshStandardMaterial
+      mat.emissiveIntensity += (targetCoreEmissive.current - mat.emissiveIntensity) * 0.05
 
       renderer.render(scene, camera)
       frameId = requestAnimationFrame(animate)
@@ -120,6 +130,12 @@ export default function ThreeScene({
     targetCameraZ.current = preset.cameraZ
     targetCoreScale.current = preset.coreScale
   }, [mode])
+
+  // 监听选中状态
+  // 1 代表选中 ，2 代表没有选中
+  useEffect(() => {
+    targetCoreEmissive.current = activeProject ? 1 : 0.2
+  }, [activeProject])
 
   return (
     <div

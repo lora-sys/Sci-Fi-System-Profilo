@@ -1,6 +1,57 @@
 "use client"
 
-import { SystemMode } from "../lib/systemState";
+import { useState } from "react"
+import { SystemMode, ProjectId } from "../lib/systemState";
+
+const PROJECTS = [
+  {
+    id: "HUD_SYSTEM",
+    title: "REAL-TIME HUD SYSTEM",
+    tech: "Next.js / Three.js / Interaction",
+  },
+  {
+    id: "DATA_VIS",
+    title: "INTERACTIVE DATA VIS",
+    tech: "D3 / GLSL / UX",
+  },
+]
+
+function ProjectItem({
+  project,
+  activate,
+  onSelect,
+}:{
+  project: {
+    id: string
+    title: string
+    tech: string
+  }
+  activate: boolean
+  onSelect: () => void
+}) {
+  return (
+    <div
+      onClick={onSelect}
+      style={{
+        marginBottom: 14,
+        cursor: "pointer",
+        color: activate ? "#4fd1c5" : "#aaa",
+      }}
+    >
+      ▸ {project.title}
+      <br />
+      <span
+        style={{
+          fontSize: 12,
+          opacity: 0.6,
+          marginLeft: 12,
+        }}
+      >
+        {project.tech}
+      </span>   
+    </div>
+  )
+}
 
 function MenuItem({
   label,
@@ -58,9 +109,13 @@ function Panel({ children }: { children: React.ReactNode }) {
 export default function HUD({
   mode,
   setMode,
+  activeProject,
+  setActiveProject,
 }: {
   mode: SystemMode
   setMode: (m: SystemMode) => void
+  activeProject: ProjectId
+  setActiveProject: (id: ProjectId) => void
 }) {
   return (
     <div
@@ -117,41 +172,32 @@ export default function HUD({
   STATUS / ROLE
   之后可以考虑做成可滚动的列表，做出控制台，hud效果，科幻效果，3d项目列表，项目的补充在下面添加就行
 */}
-    {mode === "PROJECTS" &&
-    (
-    <div 
+{mode === "PROJECTS" && (
+  <div
     style={{
-      position:"absolute",
-      top:40,
-      left:200, // 与左侧菜单对齐
-      pointerEvents:"auto",
+      position: "absolute",
+      top: 40,
+      left: 280,
+      pointerEvents: "auto",
     }}
-    >
-      <Panel>
-        <div
-        style={{ marginBottom:12,opacity:0.6}}
-        >
-          PROJECT DATABASE
-        </div>
-        <div style={{fontSize:13,lineHeight:1.6}}>
-         *SCI-FI HUD PORTFOLIO
-        <br/>
-        <span style={{opacity:0.5}}>
-          React/Three.js/WebGL
-        </span>
+  >
+    <Panel>
+      <div style={{ marginBottom: 12, opacity: 0.6 }}>
+        PROJECT DATABASE
+      </div>
 
-        <br/><br/>
+      {PROJECTS.map((p) => (
+        <ProjectItem
+          key={p.id}
+          project={p}
+          activate={activeProject === p.id}
+          onSelect={() => setActiveProject(p.id as ProjectId)}
+        />
+      ))}
+    </Panel>
+  </div>
+)}
 
-        *INTERACTIVE DATA VIS
-        <br/>
-        <span style={{opacity:0.5}}>
-          D3.js/GLSL/UX
-        </span>
-        </div>
-      </Panel>
-    </div>
-    )
-    }
 
 
       {/* 右上角状态 */}
